@@ -41,20 +41,20 @@ get_asset_name() {
 	arch="$(uname -m)"
 
 	case "$os" in
-		darwin) platform="macos" ;;
-		linux) platform="linux" ;;
-		*) fail "Platform $os not supported" ;;
+	darwin) platform="macos" ;;
+	linux) platform="linux" ;;
+	*) fail "Platform $os not supported" ;;
 	esac
 
 	case "$arch" in
-		x86_64|amd64) target_arch="x64" ;;
-		arm64|aarch64)
-			if [ "$platform" = "linux" ]; then
-				fail "Architecture $arch on Linux is not supported by dashlane-cli upstream precompiled releases."
-			fi
-			target_arch="arm64"
-			;;
-		*) fail "Architecture $arch not supported" ;;
+	x86_64 | amd64) target_arch="x64" ;;
+	arm64 | aarch64)
+		if [ "$platform" = "linux" ]; then
+			fail "Architecture $arch on Linux is not supported by dashlane-cli upstream precompiled releases."
+		fi
+		target_arch="arm64"
+		;;
+	*) fail "Architecture $arch not supported" ;;
 	esac
 
 	echo "dcli-${platform}-${target_arch}"
