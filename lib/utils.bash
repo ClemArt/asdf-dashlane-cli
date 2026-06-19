@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-# TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for dashlane-cli.
 GH_REPO="https://github.com/Dashlane/dashlane-cli"
 TOOL_NAME="dashlane-cli"
 TOOL_TEST="dcli -V"
@@ -31,8 +30,7 @@ list_github_tags() {
 }
 
 list_all_versions() {
-	# TODO: Adapt this. By default we simply list the tag names from GitHub releases.
-	# Change this function if dashlane-cli has other means of determining installable versions.
+	# List all tags from GitHub releases, which correspond to the version numbers.
 	list_github_tags
 }
 
