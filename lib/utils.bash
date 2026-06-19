@@ -36,13 +36,39 @@ list_all_versions() {
 	list_github_tags
 }
 
+get_asset_name() {
+	local os arch platform target_arch
+
+	os="$(uname -s | tr '[:upper:]' '[:lower:]')"
+	arch="$(uname -m)"
+
+	case "$os" in
+		darwin) platform="macos" ;;
+		linux) platform="linux" ;;
+		*) fail "Platform $os not supported" ;;
+	esac
+
+	case "$arch" in
+		x86_64|amd64) target_arch="x64" ;;
+		arm64|aarch64)
+			if [ "$platform" = "linux" ]; then
+				fail "Architecture $arch on Linux is not supported by dashlane-cli upstream precompiled releases."
+			fi
+			target_arch="arm64"
+			;;
+		*) fail "Architecture $arch not supported" ;;
+	esac
+
+	echo "dcli-${platform}-${target_arch}"
+}
+
 download_release() {
-	local version filename url
+	local version filename url asset_name
 	version="$1"
 	filename="$2"
 
-	# TODO: Adapt the release URL convention for dashlane-cli
-	url="$GH_REPO/archive/v${version}.tar.gz"
+	asset_name="$(get_asset_name)"
+	url="$GH_REPO/releases/download/v${version}/${asset_name}"
 
 	echo "* Downloading $TOOL_NAME release $version..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
@@ -60,8 +86,8 @@ install_version() {
 	(
 		mkdir -p "$install_path"
 		cp -r "$ASDF_DOWNLOAD_PATH"/* "$install_path"
+		chmod +x "$install_path/dcli"
 
-		# TODO: Assert dashlane-cli executable exists.
 		local tool_cmd
 		tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
 		test -x "$install_path/$tool_cmd" || fail "Expected $install_path/$tool_cmd to be executable."
