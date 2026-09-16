@@ -22,8 +22,6 @@
 Plugin:
 
 ```shell
-asdf plugin add dashlane-cli
-# or
 asdf plugin add dashlane-cli https://github.com/ClemArt/asdf-dashlane-cli.git
 ```
 
@@ -31,13 +29,13 @@ dashlane-cli:
 
 ```shell
 # Show all installable versions
-asdf list-all dashlane-cli
+asdf list all dashlane-cli
 
 # Install specific version
 asdf install dashlane-cli latest
 
 # Set a version globally (on your ~/.tool-versions file)
-asdf global dashlane-cli latest
+asdf set -u dashlane-cli latest
 
 # Now dashlane-cli commands are available
 dcli -V
